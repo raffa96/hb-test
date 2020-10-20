@@ -1,0 +1,30 @@
+{{!-- layouts/base.hbs --}}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      {{#if title}}
+        {{title}}
+      {{else}}
+        Home
+      {{/if}}
+    </title>
+    <link rel="stylesheet" href="dist/css/style.css">
+  </head>
+  <body>
+    {{#> hero-block}}
+      {{!-- Hero content goes here. --}}
+    {{/hero-block}}
+
+    <footer>
+      {{#> footer-block}}
+        {{!--
+          The `includes/footer` partial is the default content,
+          but can be overridden.
+        --}}
+        {{> includes/footer }}
+      {{/footer-block}}
+    </footer>
+  </body>
+</html>
