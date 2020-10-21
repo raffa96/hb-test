@@ -1,29 +1,20 @@
-const gulp = require("gulp");
-const handlebars = require("gulp-compile-handlebars");
-const rename = require("gulp-rename");
+const gulp = require('gulp');
 
-gulp.task("default", function () {
-  const templateData = {
-    username: "John",
-  };
+const handlebars = require('gulp-compile-handlebars');
 
-  const options = {
-    ignorePartials: true,
-    batch: ["./src/includes"],
-    helpers: {
-      capitals: function (str) {
-        return str.toUpperCase();
-      },
-    },
-  };
+const rename = require('gulp-rename');
 
-  return gulp
-    .src("src/pages/*.hbs")
-    .pipe(handlebars(templateData, options))
-    .pipe(
-      rename({
-        extname: ".html",
-      })
-    )
-    .pipe(gulp.dest("dist"));
+gulp.task('default', function () {
+    return gulp
+        .src('./src/pages/*.hbs')
+        .pipe(handlebars({}, {
+            ignorePartials: true,
+            batch: ['./src/partials']
+        }))
+        .pipe(
+            rename({
+                extname: '.html',
+            })
+        )
+        .pipe(gulp.dest('./dist'));
 });

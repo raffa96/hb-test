@@ -7,16 +7,15 @@
       {{#if title}}
         {{title}}
       {{else}}
-        Handlebars Test
+          Handlebars Test
       {{/if}}
     </title>
-    <link rel="stylesheet" href="dist/css/style.css">
   </head>
   <body>
-    {{>includes/header}}
+  {{> includes/header}}
 
-    {{#>main-block}}{{/main-block}}
+  {{#>main-block}}{{/main-block}}
 
-    {{>includes/footer}}     
+  {{> includes/footer}}
   </body>
 </html>
