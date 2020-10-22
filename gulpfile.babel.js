@@ -8,15 +8,13 @@ import csso from "gulp-csso";
 
 import sourcemaps from "gulp-sourcemaps";
 
-import babel from "gulp-babel";
-
-import terser from "gulp-terser";
-
 import handlebars from "gulp-compile-handlebars";
 
 import rename from "gulp-rename";
 
 import browserSync from "browser-sync";
+
+import concat from "gulp-concat";
 
 const sync = browserSync.create();
 
@@ -26,16 +24,10 @@ const scss = () => {
         .pipe(sass())
         .pipe(prefix())
         .pipe(csso())
+        .pipe(concat('style.min.css'))
         .pipe(sourcemaps.write("."))
         .pipe(dest("./dist/css"))
         .pipe(sync.stream());
-};
-
-const js = () => {
-    return src("./src/js/**/*.js")
-        .pipe(babel())
-        .pipe(terser())
-        .pipe(dest("./dist/js"));
 };
 
 const hbs = () => {
@@ -58,9 +50,8 @@ const hbs = () => {
 };
 
 exports.scss = scss;
-exports.js = js;
 exports.hbs = hbs;
-exports.default = function () {
+exports.default = () => {
     sync.init({
         server: {
             baseDir: "./dist"
@@ -68,7 +59,6 @@ exports.default = function () {
     });
 
     watch("./src/scss/**/*.scss", scss);
-    watch("./src/js/**/*.js", js);
     watch("./src/**/*.hbs", hbs)
     watch("./dist/*.html").on("change", sync.reload);
 };
