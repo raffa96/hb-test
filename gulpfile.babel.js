@@ -1,20 +1,26 @@
-const {src, dest, watch} = require("gulp");
+import {dest, src, watch} from "gulp";
 
-const sass = require("gulp-dart-sass");
+import sass from "gulp-dart-sass";
 
-const prefix = require("gulp-autoprefixer");
+import prefix from "gulp-autoprefixer";
 
-const csso = require("gulp-csso");
+import csso from "gulp-csso";
 
-const sourcemaps = require("gulp-sourcemaps");
+import sourcemaps from "gulp-sourcemaps";
 
-const handlebars = require("gulp-compile-handlebars");
+import babel from "gulp-babel";
 
-const rename = require("gulp-rename");
+import terser from "gulp-terser";
 
-const browserSync = require("browser-sync").create();
+import handlebars from "gulp-compile-handlebars";
 
-function scss() {
+import rename from "gulp-rename";
+
+import browserSync from "browser-sync";
+
+const sync = browserSync.create();
+
+const scss = () => {
     return src("./src/scss/**/*.scss")
         .pipe(sourcemaps.init())
         .pipe(sass())
@@ -22,10 +28,17 @@ function scss() {
         .pipe(csso())
         .pipe(sourcemaps.write("."))
         .pipe(dest("./dist/css"))
-        .pipe(browserSync.stream());
-}
+        .pipe(sync.stream());
+};
 
-function hbs() {
+const js = () => {
+    return src("./src/js/**/*.js")
+        .pipe(babel())
+        .pipe(terser())
+        .pipe(dest("./dist/js"));
+};
+
+const hbs = () => {
     return src("./src/pages/*.hbs")
         .pipe(
             handlebars(
@@ -42,19 +55,20 @@ function hbs() {
             })
         )
         .pipe(dest("./dist"));
-}
+};
 
 exports.scss = scss;
+exports.js = js;
 exports.hbs = hbs;
-
 exports.default = function () {
-    browserSync.init({
+    sync.init({
         server: {
             baseDir: "./dist"
         }
     });
 
     watch("./src/scss/**/*.scss", scss);
+    watch("./src/js/**/*.js", js);
     watch("./src/**/*.hbs", hbs)
-    watch("./dist/*.html").on("change", browserSync.reload);
+    watch("./dist/*.html").on("change", sync.reload);
 };
